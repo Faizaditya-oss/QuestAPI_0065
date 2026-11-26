@@ -37,7 +37,7 @@ import com.faiz.localrestapi_0065.R
 import com.faiz.localrestapi_0065.modeldata.DataSiswa
 import com.faiz.localrestapi_0065.uicontroller.route.DestinasiHome
 import com.faiz.localrestapi_0065.uicontroller.viewmodel.HomeViewModel
-import com.faiz.localrestapi_0065.uicontroller.PenyediaViewModel
+import com.faiz.localrestapi_0065.uicontroller.viewmodel.PenyediaViewModel
 import com.faiz.localrestapi_0065.uicontroller.viewmodel.StatusUiSiswa
 
 @OptIn(ExperimentalMaterial3Api::class)

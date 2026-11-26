@@ -1,7 +1,7 @@
 package com.faiz.localrestapi_0065.repositori
 
 import android.app.Application
-import com.faiz.localrestapi_0065.mydatasiswa.apiservice.ServiceApiSiswa
+import com.faiz.localrestapi_0065.apiservice.ServiceApiSiswa
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType

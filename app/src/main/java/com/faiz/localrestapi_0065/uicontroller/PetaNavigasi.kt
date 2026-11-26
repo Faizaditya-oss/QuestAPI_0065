@@ -9,30 +9,39 @@ import androidx.navigation.compose.rememberNavController
 import com.faiz.localrestapi_0065.uicontroller.route.DestinasiEntry
 import com.faiz.localrestapi_0065.uicontroller.route.DestinasiHome
 import com.faiz.localrestapi_0065.uicontroller.view.EntrySiswaScreen
+import com.faiz.localrestapi_0065.uicontroller.view.HomeScreen
 
 @Composable
-fun DataSiswaApp(navController: NavHostController =
-                     rememberNavController(), modifier: Modifier){
-    HostNavigasi(navController = navController)
+fun DataSiswaApp(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+) {
+    HostNavigasi(navController = navController, modifier = modifier)
 }
 
 @Composable
 fun HostNavigasi(
     navController: NavHostController,
-    modifier: Modifier = Modifier
-){
-    NavHost(navController = navController, startDestination =
-        DestinasiHome.route, modifier = Modifier ){
+    modifier: Modifier = Modifier,
+) {
+    NavHost(
+        navController = navController,
+        startDestination = DestinasiHome.route,
+        modifier = modifier,
+    ) {
         composable(DestinasiHome.route) {
-            HomeScreen(navigateToItemEntry = { navController.navigate
-                (DestinasiEntry.route) },
-
-                )
+            HomeScreen(
+                navigateToItemEntry = {
+                    navController.navigate(DestinasiEntry.route)
+                },
+            )
         }
-        composable(DestinasiEntry.route){
-            EntrySiswaScreen(navigateBack = { navController.navigate
-                (DestinasiHome.route) })
+        composable(DestinasiEntry.route) {
+            EntrySiswaScreen(
+                navigateBack = {
+                    navController.navigate(DestinasiHome.route)
+                },
+            )
         }
-
     }
 }

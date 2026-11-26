@@ -33,9 +33,9 @@ class HomeViewModel(private val repositoryDataSiswa:
             listSiswa = try {
                 StatusUiSiswa.Success(repositoryDataSiswa.getDataSiswa
                     ())
-            } catch (e:IOException){
+            } catch (e: IOException){
                 StatusUiSiswa.Error
-            } catch (e:HttpException){
+            } catch (e: HttpException){
                 StatusUiSiswa.Error
             }  catch (e: Exception) {
                 StatusUiSiswa.Error
