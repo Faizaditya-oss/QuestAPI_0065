@@ -1,4 +1,4 @@
-package com.faiz.localrestapi_0065.uicontroller.viewmodel
+package com.faiz.localrestapi_0065.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,39 +8,38 @@ import androidx.lifecycle.viewModelScope
 import com.faiz.localrestapi_0065.modeldata.DataSiswa
 import com.faiz.localrestapi_0065.repositori.RepositoryDataSiswa
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface StatusUiSiswa {
-    data class Success(val siswa: List<DataSiswa> = listOf()) :
-        StatusUiSiswa
+    data class Success(val siswa: List<DataSiswa> = listOf()) : StatusUiSiswa
     object Error : StatusUiSiswa
     object Loading : StatusUiSiswa
 }
-class HomeViewModel(private val repositoryDataSiswa:
-                    RepositoryDataSiswa): ViewModel() {
-    var listSiswa: StatusUiSiswa by mutableStateOf(StatusUiSiswa
-        .Loading)
+
+class HomeViewModel(
+    private val repositoryDataSiswa: RepositoryDataSiswa
+) : ViewModel() {
+
+    var listSiswa: StatusUiSiswa by mutableStateOf(StatusUiSiswa.Loading)
         private set
 
-    init{
+    init {
         loadSiswa()
     }
 
-    fun loadSiswa(){
+    fun loadSiswa() {
         viewModelScope.launch {
             listSiswa = StatusUiSiswa.Loading
+
             listSiswa = try {
-                StatusUiSiswa.Success(repositoryDataSiswa.getDataSiswa
-                    ())
-            } catch (e: IOException){
+                StatusUiSiswa.Success(
+                    repositoryDataSiswa.getDataSiswa()
+                )
+            } catch (e: IOException) {
                 StatusUiSiswa.Error
-            } catch (e: HttpException){
-                StatusUiSiswa.Error
-            }  catch (e: Exception) {
+            } catch (e: Exception) {
                 StatusUiSiswa.Error
             }
         }
     }
-
 }

@@ -12,35 +12,28 @@ import com.faiz.localrestapi_0065.uicontroller.view.EntrySiswaScreen
 import com.faiz.localrestapi_0065.uicontroller.view.HomeScreen
 
 @Composable
-fun DataSiswaApp(
-    modifier: Modifier = Modifier,
+fun PetaNavigasi(
     navController: NavHostController = rememberNavController(),
-) {
-    HostNavigasi(navController = navController, modifier = modifier)
-}
-
-@Composable
-fun HostNavigasi(
-    navController: NavHostController,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
         startDestination = DestinasiHome.route,
-        modifier = modifier,
+        modifier = modifier
     ) {
-        composable(DestinasiHome.route) {
+        composable(route = DestinasiHome.route) {
             HomeScreen(
                 navigateToItemEntry = {
                     navController.navigate(DestinasiEntry.route)
-                },
+                }
             )
         }
-        composable(DestinasiEntry.route) {
+
+        composable(route = DestinasiEntry.route) {
             EntrySiswaScreen(
                 navigateBack = {
-                    navController.navigate(DestinasiHome.route)
-                },
+                    navController.popBackStack()
+                }
             )
         }
     }

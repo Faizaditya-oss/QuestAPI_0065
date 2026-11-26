@@ -1,74 +1,98 @@
-package com.faiz.localrestapi_0065.uicontroller.viewmodel
+package com.faiz.localrestapi_0065.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.faiz.localrestapi_0065.modeldata.DataSiswa
 import com.faiz.localrestapi_0065.repositori.RepositoryDataSiswa
-import retrofit2.Response
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
-class EntryViewModel(private val repositoryDataSiswa:
-                     RepositoryDataSiswa): ViewModel() {
-    var uiStateSiswa by mutableStateOf(UIStatesSiswa())
-        private  set
+data class DetailSiswa(
+    val id: Int = 0,
+    val nama: String = "",
+    val alamat: String = "",
+    val telpon: String = ""
+)
 
-    /* Fungsi untuk memvalidasi input */
-    private fun validasiInput(uiState: DetailsSiswa = uiStateSiswa
-        .detailsSiswa ): Boolean {
-        return with(uiState) {
-            nama.isNotBlank() && alamat.isNotBlank() && telpon
-                .isNotBlank()
+data class UIStateSiswa(
+    val detailSiswa: DetailSiswa = DetailSiswa(),
+    val isEntryValid: Boolean = false
+)
+
+class EntryViewModel(
+    private val repositoryDataSiswa: RepositoryDataSiswa
+) : ViewModel() {
+
+    var uiStateSiswa by mutableStateOf(UIStateSiswa())
+        private set
+
+    var isSaving by mutableStateOf(false)
+        private set
+
+    var errorMessage by mutableStateOf<String?>(null)
+        private set
+
+    private fun validasiInput(data: DetailSiswa = uiStateSiswa.detailSiswa): Boolean {
+        return data.nama.isNotBlank() &&
+                data.alamat.isNotBlank() &&
+                data.telpon.isNotBlank()
+    }
+
+    fun updateUiState(detailSiswa: DetailSiswa) {
+        uiStateSiswa = UIStateSiswa(
+            detailSiswa = detailSiswa,
+            isEntryValid = validasiInput(detailSiswa)
+        )
+        if (errorMessage != null) {
+            errorMessage = null
         }
     }
 
-    fun updateUiState(detailsSiswa: DetailsSiswa) {
-        uiStateSiswa =
-            UIStatesSiswa(detailsSiswa = detailsSiswa, isEntryValid =
-                validasiInput(detailsSiswa))
-    }
+    fun addSiswa(onSuccess: () -> Unit) {
+        if (!validasiInput()) {
+            uiStateSiswa = uiStateSiswa.copy(isEntryValid = false)
+            errorMessage = "Lengkapi semua field terlebih dahulu"
+            return
+        }
 
-    /* Fungsi untuk menyimpan data yang di-entry */
-    suspend fun addSiswa() {
-        if (validasiInput()) {
-            val sip:Response<Void> =repositoryDataSiswa.postDataSiswa(
-                uiStateSiswa.detailsSiswa.toDataSiswa())
-            if (sip.isSuccessful){
-                println("Sukses Tambah Data : ${sip.message()}")
-            }else{
-                println("Gagal tambah data : ${sip.errorBody()}")
+        viewModelScope.launch {
+            isSaving = true
+            errorMessage = null
+
+            try {
+                val data = uiStateSiswa.detailSiswa.copy(
+                    nama = uiStateSiswa.detailSiswa.nama.trim(),
+                    alamat = uiStateSiswa.detailSiswa.alamat.trim(),
+                    telpon = uiStateSiswa.detailSiswa.telpon.trim()
+                )
+                val siswa = DataSiswa(
+                    id = data.id,
+                    nama = data.nama,
+                    alamat = data.alamat,
+                    telpon = data.telpon
+                )
+
+                val response = repositoryDataSiswa.postDataSiswa(siswa)
+
+                if (response.isSuccessful) {
+                    uiStateSiswa = UIStateSiswa()
+                    onSuccess()
+                } else {
+                    errorMessage = "Gagal menyimpan data (HTTP ${response.code()})"
+                }
+            } catch (e: IOException) {
+                errorMessage = "Tidak dapat terhubung ke server XAMPP (${e.localizedMessage ?: "IOException"})"
+            } catch (e: HttpException) {
+                errorMessage = "Kesalahan server (HTTP ${e.code()})"
+            } catch (e: Exception) {
+                errorMessage = e.localizedMessage ?: "Terjadi kesalahan saat menyimpan data"
+            } finally {
+                isSaving = false
             }
         }
     }
 }
-
-data class UIStatesSiswa(
-    val detailsSiswa: DetailsSiswa = DetailsSiswa(),
-    val isEntryValid: Boolean = false
-)
-
-data class DetailsSiswa(
-    val id: Int = 0,
-    val nama: String = "",
-    val alamat: String = "",
-    val telpon: String = "",
-)
-fun DetailsSiswa.toDataSiswa(): DataSiswa = DataSiswa(
-    id = id,
-    nama = nama,
-    alamat = alamat,
-    telpon = telpon
-)
-
-fun DataSiswa.toUIStatesSiswa(isEntryValid: Boolean = false):
-        UIStatesSiswa = UIStatesSiswa(
-    detailsSiswa = this.toDetailSiswa(),
-    isEntryValid = isEntryValid
-)
-
-fun DataSiswa.toDetailSiswa(): DetailsSiswa = DetailsSiswa(
-    id = id,
-    nama = nama,
-    alamat = alamat,
-    telpon = telpon
-)

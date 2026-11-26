@@ -1,6 +1,5 @@
 package com.faiz.localrestapi_0065.uicontroller.view
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,10 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.faiz.localrestapi_0065.R
-import com.faiz.localrestapi_0065.uicontroller.viewmodel.DetailSiswa
-import com.faiz.localrestapi_0065.uicontroller.viewmodel.EntryViewModel
-import com.faiz.localrestapi_0065.uicontroller.viewmodel.PenyediaViewModel
-import com.faiz.localrestapi_0065.uicontroller.viewmodel.UIStateSiswa
+import com.faiz.localrestapi_0065.viewmodel.DetailSiswa
+import com.faiz.localrestapi_0065.viewmodel.EntryViewModel
+import com.faiz.localrestapi_0065.viewmodel.PenyediaViewModel
+import com.faiz.localrestapi_0065.viewmodel.UIStateSiswa
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
