@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LocalRestAPI_0065Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
+                    Greeting( //default
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
