@@ -1,4 +1,9 @@
 package com.faiz.localrestapi_0065.uicontroller.route
 
-object DestinasiEntry {
+import com.faiz.localrestapi_0065.R
+import com.faiz.localrestapi_0065.mydatasiswa.R
+
+object DestinasiEntry : DestinasiNavigasi {
+    override val route = "item_entry"
+    override val titleRes = R.string.entry_siswa
 }
